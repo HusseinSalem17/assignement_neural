@@ -4,11 +4,11 @@ import 'package:assigenment/utilities/utilities.dart';
 class Services {
   Future<List<double>> fileAndNormalize(String filePath) async {
     //Resize image
-    final String resizedImagePath =
-        await Resize.resizeImage(filePath, 400, 400);
+    /*final String resizedImagePath =
+        await Resize.resizeImage(filePath, 400, 400);*/
     // Get the pixel values from the file
     final List<double> pixelValues =
-        await Utilities.fileImageTo1DList(resizedImagePath);
+        await Utilities.fileImageTo1DList(filePath);
 
     // Normalize the pixel values
     final List<double> normalizedPixelValues =
