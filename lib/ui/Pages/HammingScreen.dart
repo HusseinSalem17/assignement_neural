@@ -200,7 +200,31 @@ class _HammingPageState extends State<HammingPage> {
     });
   }
 
-  /*
+  
+
+  reset() {
+    setState(() {
+      img1 = null;
+      img2 = null;
+      img3 = null;
+    });
+  }
+
+  Future<int> showResult() async {
+    return 90000000000000;
+  }
+
+  Future<void> loadImageMatrix() async {
+    final matrix = await Services.fileAndNormalize(img1!.path);
+    final matrix2 = await Services.fileAndNormalize(img2!.path);
+
+    final matrix3 = await Services.fileAndNormalize(img3!.path);
+
+    Hamming h = Hamming(weights: [matrix, matrix2], input: matrix3);
+    print('first Result : ${h.result()}');
+  }
+}
+/*
 Future<void> loadImageMatrix() async {
   final matrix =
       await Temp.convertAssetImageTo1DArray('assets/images/dog.11.jpg');
@@ -246,26 +270,3 @@ Future<void> loadImageMatrix() async {
   print('Prediction: $prediction');
 }
 */
-
-  reset() {
-    setState(() {
-      img1 = null;
-      img2 = null;
-      img3 = null;
-    });
-  }
-
-  Future<int> showResult() async {
-    return 90000000000000;
-  }
-
-  Future<void> loadImageMatrix() async {
-    final matrix = await Services.fileAndNormalize(img1!.path);
-    final matrix2 = await Services.fileAndNormalize(img2!.path);
-
-    final matrix3 = await Services.fileAndNormalize(img3!.path);
-
-    Hamming h = Hamming(weights: [matrix, matrix2], input: matrix3);
-    print('first Result : ${h.result()}');
-  }
-}
