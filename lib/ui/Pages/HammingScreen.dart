@@ -1,15 +1,17 @@
 import 'dart:io';
+import 'package:assigenment/algorithms/algorithm.dart';
+import 'package:assigenment/services/services.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
-class Hamming extends StatefulWidget {
-  const Hamming({Key? key}) : super(key: key);
+class HammingPage extends StatefulWidget {
+  const HammingPage({Key? key}) : super(key: key);
 
   @override
-  State<Hamming> createState() => _HammingState();
+  State<HammingPage> createState() => _HammingPageState();
 }
 
-class _HammingState extends State<Hamming> {
+class _HammingPageState extends State<HammingPage> {
   final ImagePicker _picker = ImagePicker();
   File? img1, img2, img3;
 
@@ -58,7 +60,7 @@ class _HammingState extends State<Hamming> {
                         ),
                         const SizedBox(height: 9),
                         ElevatedButton(
-                          onPressed: () => fitchPhoto1(),
+                          onPressed: fitchPhoto1(),
                           child: const Text('choose photo 1'),
                         )
                       ],
@@ -78,7 +80,7 @@ class _HammingState extends State<Hamming> {
                         ),
                         const SizedBox(height: 9),
                         ElevatedButton(
-                          onPressed: () => fitchPhoto2(),
+                          onPressed: fitchPhoto2(),
                           child: const Text('choose photo 2'),
                         )
                       ],
@@ -101,7 +103,7 @@ class _HammingState extends State<Hamming> {
                     ),
                     const SizedBox(height: 9),
                     ElevatedButton(
-                      onPressed: () => fitchPhoto3(),
+                      onPressed: fitchPhoto3(),
                       child: const Text('choose photo 3'),
                     )
                   ],
@@ -114,7 +116,7 @@ class _HammingState extends State<Hamming> {
               child: Container(
                 width: 120,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: loadImageMatrix,
                   child: const Text('Show Result'),
                 ),
               ),
@@ -150,8 +152,8 @@ class _HammingState extends State<Hamming> {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(
       source: ImageSource.gallery,
-      maxHeight: 180,
-      maxWidth: 180,
+      maxHeight: 400,
+      maxWidth: 400,
     );
     final file = File(pickedFile!.path);
     print('@@@@@@***Image Path***@@@@@@ ${pickedFile.path}');
@@ -198,6 +200,53 @@ class _HammingState extends State<Hamming> {
     });
   }
 
+  /*
+Future<void> loadImageMatrix() async {
+  final matrix =
+      await Temp.convertAssetImageTo1DArray('assets/images/dog.11.jpg');
+  final matrix2 =
+      await Temp.convertAssetImageTo1DArray('assets/images/cat.10.jpg');
+
+  final matrix3 =
+      await Temp.convertAssetImageTo1DArray('assets/images/dog.10.jpg');
+
+  final matrix4 =
+      await Utilities.normalizedPixelValues('assets/images/dog.11.jpg');
+  final matrix5 =
+      await Utilities.normalizedPixelValues('assets/images/cat.10.jpg');
+  final matrix6 =
+      await Utilities.normalizedPixelValues('assets/images/dog.10.jpg');
+  List<List<double>> l1 = [matrix4, matrix5];
+  final bias = [0, 0];
+  final h2 = HammingNeuralNetwork(l1, bias);
+  final result1 = h2.run(matrix6);
+  print('First Result: $result1');
+
+  Hamming h1 = Hamming(weights: l1, input: matrix6);
+  print('Second Result : ${h1.result()}');
+
+  print(' this length matrix1 : ${matrix.length}');
+  print(' this length matrix2 : ${matrix2.length}');
+  print(' this length matrix3 : ${matrix3.length}');
+  print(' this length matrix4 : ${matrix4.length}');
+
+  print(' this matrix1 : $matrix');
+  print(' this matrix2 : $matrix2');
+  print('matrix 3 : $matrix3');
+  print('matrix 4 : $matrix4');
+
+  List<List<double>> l = [matrix, matrix2];
+  Hamming h = Hamming(weights: l, input: matrix3);
+  print('Thired Result : ${h.result()}');
+
+  final perceptron = Perceptron(numInputs: 400, learningRate: 0.1);
+  perceptron.train([matrix, matrix2], [1, -1]);
+
+  final prediction = perceptron.predict(matrix3);
+  print('Prediction: $prediction');
+}
+*/
+
   reset() {
     setState(() {
       img1 = null;
@@ -208,5 +257,15 @@ class _HammingState extends State<Hamming> {
 
   Future<int> showResult() async {
     return 90000000000000;
+  }
+
+  Future<void> loadImageMatrix() async {
+    final matrix = await Services.fileAndNormalize(img1!.path);
+    final matrix2 = await Services.fileAndNormalize(img2!.path);
+
+    final matrix3 = await Services.fileAndNormalize(img3!.path);
+
+    Hamming h = Hamming(weights: [matrix, matrix2], input: matrix3);
+    print('first Result : ${h.result()}');
   }
 }

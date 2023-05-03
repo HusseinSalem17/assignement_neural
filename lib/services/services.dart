@@ -2,7 +2,7 @@ import 'package:assigenment/utilities/resize.dart';
 import 'package:assigenment/utilities/utilities.dart';
 
 class Services {
-  Future<List<double>> fileAndNormalize(String filePath) async {
+  static Future<List<double>> fileAndNormalize(String filePath) async {
     //Resize image
     /*final String resizedImagePath =
         await Resize.resizeImage(filePath, 400, 400);*/
