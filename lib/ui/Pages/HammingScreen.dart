@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:assigenment/algorithms/algorithm.dart';
 import 'package:assigenment/services/services.dart';
+import 'package:assigenment/utilities/resize.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -60,7 +61,7 @@ class _HammingPageState extends State<HammingPage> {
                         ),
                         const SizedBox(height: 9),
                         ElevatedButton(
-                          onPressed: fitchPhoto1(),
+                          onPressed: fitchPhoto1,
                           child: const Text('choose photo 1'),
                         )
                       ],
@@ -80,7 +81,7 @@ class _HammingPageState extends State<HammingPage> {
                         ),
                         const SizedBox(height: 9),
                         ElevatedButton(
-                          onPressed: fitchPhoto2(),
+                          onPressed: fitchPhoto2,
                           child: const Text('choose photo 2'),
                         )
                       ],
@@ -103,7 +104,7 @@ class _HammingPageState extends State<HammingPage> {
                     ),
                     const SizedBox(height: 9),
                     ElevatedButton(
-                      onPressed: fitchPhoto3(),
+                      onPressed: fitchPhoto3,
                       child: const Text('choose photo 3'),
                     )
                   ],
@@ -152,8 +153,6 @@ class _HammingPageState extends State<HammingPage> {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(
       source: ImageSource.gallery,
-      maxHeight: 400,
-      maxWidth: 400,
     );
     final file = File(pickedFile!.path);
     print('@@@@@@***Image Path***@@@@@@ ${pickedFile.path}');
@@ -170,8 +169,6 @@ class _HammingPageState extends State<HammingPage> {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(
       source: ImageSource.gallery,
-      maxHeight: 180,
-      maxWidth: 180,
     );
     final file = File(pickedFile!.path);
     setState(() {
@@ -187,8 +184,6 @@ class _HammingPageState extends State<HammingPage> {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(
       source: ImageSource.gallery,
-      maxHeight: 180,
-      maxWidth: 180,
     );
     final file = File(pickedFile!.path);
     setState(() {
@@ -199,8 +194,6 @@ class _HammingPageState extends State<HammingPage> {
       }
     });
   }
-
-  
 
   reset() {
     setState(() {
@@ -215,11 +208,15 @@ class _HammingPageState extends State<HammingPage> {
   }
 
   Future<void> loadImageMatrix() async {
-    final matrix = await Services.fileAndNormalize(img1!.path);
-    final matrix2 = await Services.fileAndNormalize(img2!.path);
+    final newMatrix = await Resize.resizeImage(img1!.path, 400, 400);
+    final newMatrix2 = await Resize.resizeImage(img2!.path, 400, 400);
+    final newMatrix3 = await Resize.resizeImage(img3!.path, 400, 400);
 
-    final matrix3 = await Services.fileAndNormalize(img3!.path);
+    final matrix = await Services.fileAndNormalize(newMatrix);
+    final matrix2 = await Services.fileAndNormalize(newMatrix2);
+    final matrix3 = await Services.fileAndNormalize(newMatrix3);
 
+    
     Hamming h = Hamming(weights: [matrix, matrix2], input: matrix3);
     print('first Result : ${h.result()}');
   }
