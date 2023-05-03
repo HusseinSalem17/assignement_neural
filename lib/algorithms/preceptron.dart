@@ -40,4 +40,8 @@ class Perceptron {
       iteration++;
     }
   }
+
+  void clear() {
+    weights = [];
+  }
 }

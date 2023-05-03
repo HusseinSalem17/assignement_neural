@@ -215,7 +215,6 @@ class _HammingPageState extends State<HammingPage> {
     final matrix = await Services.fileAndNormalize(newMatrix);
     final matrix2 = await Services.fileAndNormalize(newMatrix2);
     final matrix3 = await Services.fileAndNormalize(newMatrix3);
-
     
     Hamming h = Hamming(weights: [matrix, matrix2], input: matrix3);
     print('first Result : ${h.result()}');
