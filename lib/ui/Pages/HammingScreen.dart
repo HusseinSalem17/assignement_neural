@@ -57,7 +57,10 @@ class _HammingPageState extends State<HammingPage> {
                                   Icons.image,
                                   size: 50,
                                 )
-                              : Image.file(img1!),
+                              : Image(
+                              image: FileImage(img1!),
+                              fit: BoxFit.fill,
+                            ),
                         ),
                         const SizedBox(height: 9),
                         ElevatedButton(
@@ -77,7 +80,10 @@ class _HammingPageState extends State<HammingPage> {
                                   Icons.image,
                                   size: 50,
                                 )
-                              : Image.file(img2!),
+                              : Image(
+                                  image: FileImage(img2!),
+                                  fit: BoxFit.fill,
+                                ),
                         ),
                         const SizedBox(height: 9),
                         ElevatedButton(
@@ -100,7 +106,10 @@ class _HammingPageState extends State<HammingPage> {
                               Icons.image,
                               size: 50,
                             )
-                          : Image.file(img3!),
+                          : Image(
+                              image: FileImage(img3!),
+                              fit: BoxFit.fill,
+                            ),
                     ),
                     const SizedBox(height: 9),
                     ElevatedButton(
@@ -208,17 +217,22 @@ class _HammingPageState extends State<HammingPage> {
   }
 
   Future<void> loadImageMatrix() async {
-    final newMatrix = await Resize.resizeImage(img1!.path, 400, 400);
-    final newMatrix2 = await Resize.resizeImage(img2!.path, 400, 400);
-    final newMatrix3 = await Resize.resizeImage(img3!.path, 400, 400);
-
-    final matrix = await Services.fileAndNormalize(newMatrix);
-    final matrix2 = await Services.fileAndNormalize(newMatrix2);
-    final matrix3 = await Services.fileAndNormalize(newMatrix3);
     
+    var matrix = await Services.fileAndNormalize(img1!.path);
+    var matrix2 = await Services.fileAndNormalize(img2!.path);
+    var matrix3 = await Services.fileAndNormalize(img3!.path);
+    
+    var num = minOfThree(matrix.length, matrix2.length, matrix3.length);
+    matrix = Resize.normalizeListToSize(matrix, num);
+    matrix2 = Resize.normalizeListToSize(matrix2, num);
+    matrix3 = Resize.normalizeListToSize(matrix3, num);
+
     Hamming h = Hamming(weights: [matrix, matrix2], input: matrix3);
     print('first Result : ${h.result()}');
   }
+}
+int minOfThree(int a, int b, int c) {
+  return a < b ? (a < c ? a : c) : (b < c ? b : c);
 }
 /*
 Future<void> loadImageMatrix() async {

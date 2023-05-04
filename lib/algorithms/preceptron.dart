@@ -5,10 +5,9 @@ class Perceptron {
   double? bias;
   double? learningRate;
 
-  Perceptron({required int numInputs, required double learningRate}) {
+  Perceptron({required int numInputs, required double this.learningRate}) {
     weights = List.generate(numInputs, (i) => Random().nextDouble());
     bias = Random().nextDouble();
-    this.learningRate = learningRate;
   }
 
   int predict(List<double> inputs) {
@@ -21,7 +20,7 @@ class Perceptron {
   }
 
   void train(List<List<double>> inputs, List<int> targets,
-      {int maxIterations = 5000}) {
+      {int maxIterations = 1000}) {
     int numErrors = targets.length;
     int iteration = 0;
     while (numErrors > 0 && iteration < maxIterations) {

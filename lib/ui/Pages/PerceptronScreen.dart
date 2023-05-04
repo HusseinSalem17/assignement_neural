@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 import 'package:assigenment/algorithms/algorithm.dart';
 import 'package:assigenment/algorithms/preceptron.dart';
 import 'package:assigenment/services/services.dart';
@@ -58,7 +59,10 @@ class _PreceptronPageState extends State<PreceptronPage> {
                                   Icons.image,
                                   size: 50,
                                 )
-                              : Image.file(img1!),
+                              : Image(
+                                  image: FileImage(img1!),
+                                  fit: BoxFit.fill,
+                                ),
                         ),
                         const SizedBox(height: 9),
                         ElevatedButton(
@@ -78,7 +82,10 @@ class _PreceptronPageState extends State<PreceptronPage> {
                                   Icons.image,
                                   size: 50,
                                 )
-                              : Image.file(img2!),
+                              : Image(
+                                  image: FileImage(img2!),
+                                  fit: BoxFit.fill,
+                                ),
                         ),
                         const SizedBox(height: 9),
                         ElevatedButton(
@@ -101,7 +108,10 @@ class _PreceptronPageState extends State<PreceptronPage> {
                               Icons.image,
                               size: 50,
                             )
-                          : Image.file(img3!),
+                          : Image(
+                              image: FileImage(img3!),
+                              fit: BoxFit.fill,
+                            ),
                     ),
                     const SizedBox(height: 9),
                     ElevatedButton(
@@ -209,19 +219,26 @@ class _PreceptronPageState extends State<PreceptronPage> {
   }
 
   Future<void> loadImageMatrix() async {
-    final newMatrix = await Resize.resizeImage(img1!.path, 400, 400);
-    final newMatrix2 = await Resize.resizeImage(img2!.path, 400, 400);
-    final newMatrix3 = await Resize.resizeImage(img3!.path, 400, 400);
+    // final newMatrix = await Resize.resizeImage(img1!.path, 400, 400);
+    // final newMatrix2 = await Resize.resizeImage(img2!.path, 400, 400);
+    // final newMatrix3 = await Resize.resizeImage(img3!.path, 400, 400);
 
-    final matrix = await Services.fileAndNormalize(newMatrix);
-    final matrix2 = await Services.fileAndNormalize(newMatrix2);
-    final matrix3 = await Services.fileAndNormalize(newMatrix3);
-
-    final perceptron = Perceptron(numInputs: 400, learningRate: 0.1);
+    var matrix = await Services.fileAndNormalize(img1!.path);
+    var matrix2 = await Services.fileAndNormalize(img2!.path);
+    var matrix3 = await Services.fileAndNormalize(img3!.path);
+    var num = minOfThree(matrix.length, matrix2.length, matrix3.length);
+    matrix = Resize.normalizeListToSize(matrix, num);
+    matrix2 = Resize.normalizeListToSize(matrix2, num);
+    matrix3 = Resize.normalizeListToSize(matrix3, num);
+    final perceptron = Perceptron(numInputs: num, learningRate: 0.1);
     perceptron.train([matrix, matrix2], [1, -1]);
     final prediction = perceptron.predict(matrix3);
     print('Prediction: $prediction');
   }
+}
+
+int minOfThree(int a, int b, int c) {
+  return a < b ? (a < c ? a : c) : (b < c ? b : c);
 }
 /*
 Future<void> loadImageMatrix() async {
