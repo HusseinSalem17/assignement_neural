@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:assigenment/algorithms/algorithm.dart';
+import 'package:assigenment/algorithms/Hamming.dart';
 import 'package:assigenment/services/services.dart';
 import 'package:assigenment/utilities/resize.dart';
 import 'package:flutter/material.dart';
