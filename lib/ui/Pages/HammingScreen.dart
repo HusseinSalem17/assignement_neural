@@ -203,10 +203,6 @@ class _HammingPageState extends State<HammingPage> {
     });
   }
 
-  Future<int> showResult() async {
-    return 90000000000000;
-  }
-
   Future<void> getResult() async {
     var matrix = await Services.fileAndNormalize(img1!.path);
     var matrix2 = await Services.fileAndNormalize(img2!.path);

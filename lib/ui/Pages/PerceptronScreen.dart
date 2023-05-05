@@ -75,7 +75,12 @@ class _PerceptronPageState extends State<PerceptronPage> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 11),
+                  const Text(
+                    'Knowledge is power.',
+                    style: TextStyle(color: Colors.white
+                    ,fontSize: 12),
+                  ),
+                  const SizedBox(height: 6),
                   Container(
                     padding: EdgeInsets.zero,
                     width: 25,
@@ -116,7 +121,7 @@ class _PerceptronPageState extends State<PerceptronPage> {
                         borderRadius: BorderRadius.circular(9),
                         color: Colors.white,
                       ),
-                      child:  Center(
+                      child: Center(
                         child: Text(
                           '$res',
                           style: const TextStyle(
@@ -229,10 +234,6 @@ class _PerceptronPageState extends State<PerceptronPage> {
       perceptron.clear();
       isLoading = false;
     });
-  }
-
-  Future<int> showResult() async {
-    return 90000000000000;
   }
 
   Future<void> learn() async {
