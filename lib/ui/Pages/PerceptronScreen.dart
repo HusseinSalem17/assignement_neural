@@ -13,7 +13,6 @@ class PerceptronPage extends StatefulWidget {
 }
 
 class _PerceptronPageState extends State<PerceptronPage> {
-  final ImagePicker _picker = ImagePicker();
   File? img1, img2, img3;
   bool isLoading = false;
 
@@ -57,20 +56,10 @@ class _PerceptronPageState extends State<PerceptronPage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Column(
-                        children: [
-                          buildGestureDetector(
-                              'Select photo 1', img1, fitchPhoto1),
-                          const SizedBox(height: 9),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          buildGestureDetector(
-                              'Select photo 2', img2, fitchPhoto2),
-                          const SizedBox(height: 9),
-                        ],
-                      )
+                      buildGestureDetector('Select photo 1', img1, fitchPhoto1),
+                      const SizedBox(height: 9),
+                      buildGestureDetector('Select photo 2', img2, fitchPhoto2),
+                      const SizedBox(height: 9),
                     ],
                   ),
                   const SizedBox(height: 30),
@@ -93,9 +82,10 @@ class _PerceptronPageState extends State<PerceptronPage> {
                     height: 25,
                     child: Visibility(
                       visible: isLoading,
-                        child: const CircularProgressIndicator(
-                      color: Colors.black,
-                    )),
+                      child: const CircularProgressIndicator(
+                        color: Colors.black,
+                      ),
+                    ),
                   ),
                   const SizedBox(height: 30),
                   buildGestureDetector('Select photo 3', img3, fitchPhoto3),
@@ -126,10 +116,10 @@ class _PerceptronPageState extends State<PerceptronPage> {
                         borderRadius: BorderRadius.circular(9),
                         color: Colors.white,
                       ),
-                      child: const Center(
+                      child:  Center(
                         child: Text(
-                          'Dog',
-                          style: TextStyle(
+                          '$res',
+                          style: const TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
                           ),
@@ -249,17 +239,11 @@ class _PerceptronPageState extends State<PerceptronPage> {
     setState(() {
       isLoading = true;
     });
-    // final newMatrix = await Resize.resizeImage(img1!.path, 400, 400);
-    // final newMatrix2 = await Resize.resizeImage(img2!.path, 400, 400);
-    // final newMatrix3 = await Resize.resizeImage(img3!.path, 400, 400);
-
     var matrix = await Services.fileAndNormalize(img1!.path);
     var matrix2 = await Services.fileAndNormalize(img2!.path);
-    // var num = minOfThree(matrix.length, matrix2.length, matrix3.length);
     matrix = Resize.normalizeListToSize(matrix, 400);
     matrix2 = Resize.normalizeListToSize(matrix2, 400);
     perceptron.train([matrix, matrix2], [1, -1]);
-    await Future.delayed(const Duration(seconds: 3));
     setState(() {
       isLoading = false;
     });
@@ -268,56 +252,8 @@ class _PerceptronPageState extends State<PerceptronPage> {
   Future<void> getResult() async {
     var matrix3 = await Services.fileAndNormalize(img3!.path);
     matrix3 = Resize.normalizeListToSize(matrix3, 400);
-    print('Prediction: ${perceptron.predict(matrix3)}');
+    setState(() {
+      res = perceptron.predict(matrix3);
+    });
   }
 }
-
-int minOfThree(int a, int b, int c) {
-  return a < b ? (a < c ? a : c) : (b < c ? b : c);
-}
-/*
-Future<void> loadImageMatrix() async {
-  final matrix =
-      await Temp.convertAssetImageTo1DArray('assets/images/dog.11.jpg');
-  final matrix2 =
-      await Temp.convertAssetImageTo1DArray('assets/images/cat.10.jpg');
-
-  final matrix3 =
-      await Temp.convertAssetImageTo1DArray('assets/images/dog.10.jpg');
-
-  final matrix4 =
-      await Utilities.normalizedPixelValues('assets/images/dog.11.jpg');
-  final matrix5 =
-      await Utilities.normalizedPixelValues('assets/images/cat.10.jpg');
-  final matrix6 =
-      await Utilities.normalizedPixelValues('assets/images/dog.10.jpg');
-  List<List<double>> l1 = [matrix4, matrix5];
-  final bias = [0, 0];
-  final h2 = HammingNeuralNetwork(l1, bias);
-  final result1 = h2.run(matrix6);
-  print('First Result: $result1');
-
-  Hamming h1 = Hamming(weights: l1, input: matrix6);
-  print('Second Result : ${h1.result()}');
-
-  print(' this length matrix1 : ${matrix.length}');
-  print(' this length matrix2 : ${matrix2.length}');
-  print(' this length matrix3 : ${matrix3.length}');
-  print(' this length matrix4 : ${matrix4.length}');
-
-  print(' this matrix1 : $matrix');
-  print(' this matrix2 : $matrix2');
-  print('matrix 3 : $matrix3');
-  print('matrix 4 : $matrix4');
-
-  List<List<double>> l = [matrix, matrix2];
-  Hamming h = Hamming(weights: l, input: matrix3);
-  print('Thired Result : ${h.result()}');
-
-  final perceptron = Perceptron(numInputs: 400, learningRate: 0.1);
-  perceptron.train([matrix, matrix2], [1, -1]);
-
-  final prediction = perceptron.predict(matrix3);
-  print('Prediction: $prediction');
-}
-*/

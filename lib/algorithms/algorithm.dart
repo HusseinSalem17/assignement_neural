@@ -1,9 +1,9 @@
-
 class Hamming {
   List<List<double>>? weights;
   List<double>? input;
   List<int>? bias;
   int? r;
+
   Hamming({this.weights, this.input}) {
     r = weights![0].length;
     bias = List.filled(weights!.length, r!);
@@ -51,7 +51,7 @@ class Hamming {
     return weightMatrix;
   }
 
-  List<double> result() {
+  int result() {
     List<double> result = multiplyAndSum();
     List<List<double>> weightMat = weightMatrixOfRNN();
     int len = bias!.length * 2;
@@ -73,8 +73,9 @@ class Hamming {
       a2 = [];
       len--;
     }
-
-    return result;
+    var res = result[0] > 0 ? 1 : -1;
+    print(res);
+    return res;
   }
 
   static bool areListsEqual(List<double> list1, List<double> list2) {

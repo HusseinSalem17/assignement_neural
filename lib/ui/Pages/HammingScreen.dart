@@ -20,140 +20,131 @@ class _HammingPageState extends State<HammingPage> {
   bool photo2 = false;
   bool photo3 = false;
 
+  int? res;
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.indigo,
-      appBar: AppBar(
-        elevation: 0,
+    return SafeArea(
+      child: Scaffold(
         backgroundColor: Colors.transparent,
-        actions: [
-          Padding(
-            padding: const EdgeInsets.all(15),
-            child: IconButton(
-              onPressed: () => reset(),
-              icon: const Icon(Icons.refresh_sharp),
-            ),
-          )
-        ],
-      ),
-      body: Container(
-        padding: EdgeInsets.zero,
-        child: Stack(
-          children: [
-            Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Column(
+        body: Container(
+          color: Colors.teal,
+          padding: EdgeInsets.zero,
+          child: Column(
+            children: [
+              Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Container(
-                          color: Colors.blueGrey,
-                          height: 150,
-                          width: 150,
-                          child: img1 == null
-                              ? const Icon(
-                            Icons.image,
-                            size: 50,
-                          )
-                              : Image(
-                              image: FileImage(img1!),
-                              fit: BoxFit.fill,
-                            ),
+                        IconButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            icon: const Icon(
+                              Icons.arrow_back_ios,
+                              color: Colors.black,
+                            )),
+                        IconButton(
+                          onPressed: () => reset(),
+                          icon: const Icon(Icons.refresh_sharp),
                         ),
-                        const SizedBox(height: 9),
-                        ElevatedButton(
-                          onPressed: fitchPhoto1,
-                          child: const Text('choose photo 1'),
-                        )
                       ],
-                    ),
-                    Column(
-                      children: [
-                        Container(
-                          color: Colors.blueGrey,
-                          height: 150,
-                          width: 150,
-                          child: img2 == null
-                              ? const Icon(
-                                  Icons.image,
-                                  size: 50,
-                                )
-                              : Image(
-                                  image: FileImage(img2!),
-                                  fit: BoxFit.fill,
-                                ),
-                        ),
-                        const SizedBox(height: 9),
-                        ElevatedButton(
-                          onPressed: fitchPhoto2,
-                          child: const Text('choose photo 2'),
-                        )
-                      ],
-                    )
-                  ],
-                ),
-                const SizedBox(height: 50),
-                Column(
-                  children: [
-                    Container(
-                      color: Colors.blueGrey,
-                      height: 150,
-                      width: 150,
-                      child: img3 == null
-                          ? const Icon(
-                              Icons.image,
-                              size: 50,
-                            )
-                          : Image(
-                              image: FileImage(img3!),
-                              fit: BoxFit.fill,
-                            ),
-                    ),
-                    const SizedBox(height: 9),
-                    ElevatedButton(
-                      onPressed: fitchPhoto3,
-                      child: const Text('choose photo 3'),
-                    )
-                  ],
-                ),
-              ],
-            ),
-            Positioned(
-              top: 600,
-              left: 20,
-              child: Container(
-                width: 120,
-                child: ElevatedButton(
-                  onPressed: loadImageMatrix,
-                  child: const Text('Show Result'),
-                ),
-              ),
-            ),
-            Positioned(
-              top: 602,
-              left: 170,
-              child: Container(
-                height: 45,
-                width: 200,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(9),
-                  color: Colors.white,
-                ),
-                child: const Center(
-                  child: Text(
-                    'Dog',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
                     ),
                   ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      buildGestureDetector('Select photo 1', img1, fitchPhoto1),
+                      const SizedBox(height: 9),
+                      buildGestureDetector('Select photo 2', img2, fitchPhoto2),
+                      const SizedBox(height: 9),
+                    ],
+                  ),
+                  const SizedBox(height: 30),
+                  buildGestureDetector('Select photo 3', img3, fitchPhoto3),
+                ],
+              ),
+              Expanded(
+                  child: Container(
+                height: 5,
+              )),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      padding: EdgeInsets.zero,
+                      width: 120,
+                      child: ElevatedButton(
+                        onPressed: getResult,
+                        child: const Text('Show Result'),
+                      ),
+                    ),
+                    Container(
+                      height: 45,
+                      width: 200,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(9),
+                        color: Colors.white,
+                      ),
+                      child: Center(
+                        child: Text(
+                          '$res',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  buildGestureDetector(String txt, File? img, selectedPhoto) {
+    return GestureDetector(
+      onTap: selectedPhoto,
+      child: Container(
+        decoration: BoxDecoration(
+          color: const Color(0xff001456),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        height: 170,
+        width: 170,
+        child: img == null
+            ? Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(
+                    Icons.image,
+                    size: 50,
+                    color: Colors.white,
+                  ),
+                  const SizedBox(height: 5),
+                  Text(
+                    txt,
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                ],
+              )
+            : ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: Image(
+                  image: FileImage(img),
+                  fit: BoxFit.fill,
                 ),
               ),
-            )
-          ],
-        ),
       ),
     );
   }
@@ -216,8 +207,7 @@ class _HammingPageState extends State<HammingPage> {
     return 90000000000000;
   }
 
-  Future<void> loadImageMatrix() async {
-
+  Future<void> getResult() async {
     var matrix = await Services.fileAndNormalize(img1!.path);
     var matrix2 = await Services.fileAndNormalize(img2!.path);
     var matrix3 = await Services.fileAndNormalize(img3!.path);
@@ -228,55 +218,12 @@ class _HammingPageState extends State<HammingPage> {
     matrix3 = Resize.normalizeListToSize(matrix3, num);
 
     Hamming h = Hamming(weights: [matrix, matrix2], input: matrix3);
-    print('first Result : ${h.result()}');
+    setState(() {
+      res = h.result();
+    });
   }
 }
+
 int minOfThree(int a, int b, int c) {
   return a < b ? (a < c ? a : c) : (b < c ? b : c);
 }
-/*
-Future<void> loadImageMatrix() async {
-  final matrix =
-      await Temp.convertAssetImageTo1DArray('assets/images/dog.11.jpg');
-  final matrix2 =
-      await Temp.convertAssetImageTo1DArray('assets/images/cat.10.jpg');
-
-  final matrix3 =
-      await Temp.convertAssetImageTo1DArray('assets/images/dog.10.jpg');
-
-  final matrix4 =
-      await Utilities.normalizedPixelValues('assets/images/dog.11.jpg');
-  final matrix5 =
-      await Utilities.normalizedPixelValues('assets/images/cat.10.jpg');
-  final matrix6 =
-      await Utilities.normalizedPixelValues('assets/images/dog.10.jpg');
-  List<List<double>> l1 = [matrix4, matrix5];
-  final bias = [0, 0];
-  final h2 = HammingNeuralNetwork(l1, bias);
-  final result1 = h2.run(matrix6);
-  print('First Result: $result1');
-
-  Hamming h1 = Hamming(weights: l1, input: matrix6);
-  print('Second Result : ${h1.result()}');
-
-  print(' this length matrix1 : ${matrix.length}');
-  print(' this length matrix2 : ${matrix2.length}');
-  print(' this length matrix3 : ${matrix3.length}');
-  print(' this length matrix4 : ${matrix4.length}');
-
-  print(' this matrix1 : $matrix');
-  print(' this matrix2 : $matrix2');
-  print('matrix 3 : $matrix3');
-  print('matrix 4 : $matrix4');
-
-  List<List<double>> l = [matrix, matrix2];
-  Hamming h = Hamming(weights: l, input: matrix3);
-  print('Thired Result : ${h.result()}');
-
-  final perceptron = Perceptron(numInputs: 400, learningRate: 0.1);
-  perceptron.train([matrix, matrix2], [1, -1]);
-
-  final prediction = perceptron.predict(matrix3);
-  print('Prediction: $prediction');
-}
-*/
