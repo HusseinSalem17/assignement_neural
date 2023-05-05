@@ -15,10 +15,7 @@ class PerceptronPage extends StatefulWidget {
 class _PerceptronPageState extends State<PerceptronPage> {
   final ImagePicker _picker = ImagePicker();
   File? img1, img2, img3;
-
-  bool photo1 = false;
-  bool photo2 = false;
-  bool photo3 = false;
+  bool isLoading = false;
 
   late final PerceptronDeltaRule perceptron =
       PerceptronDeltaRule(numInputs: 400, learningRate: 0.1);
@@ -27,150 +24,161 @@ class _PerceptronPageState extends State<PerceptronPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.indigo,
-      appBar: AppBar(
-        elevation: 0,
+    return SafeArea(
+      child: Scaffold(
         backgroundColor: Colors.transparent,
-        actions: [
-          Padding(
-            padding: const EdgeInsets.all(15),
-            child: IconButton(
-              onPressed: () => reset(),
-              icon: const Icon(Icons.refresh_sharp),
-            ),
-          )
-        ],
-      ),
-      body: Container(
-        padding: EdgeInsets.zero,
-        child: Stack(
-          children: [
-            Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Column(
+        body: Container(
+          color: Colors.teal,
+          padding: EdgeInsets.zero,
+          child: Column(
+            children: [
+              Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        GestureDetector(
-                          onTap: fitchPhoto1,
-                          child: Container(
-                            color: Colors.blueGrey,
-                            height: 150,
-                            width: 150,
-                            child: img1 == null
-                                ? const Icon(
-                                    Icons.image,
-                                    size: 50,
-                                  )
-                                : Image(
-                                    image: FileImage(img1!),
-                                    fit: BoxFit.fill,
-                                  ),
-                          ),
+                        IconButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            icon: const Icon(
+                              Icons.arrow_back_ios,
+                              color: Colors.black,
+                            )),
+                        IconButton(
+                          onPressed: () => reset(),
+                          icon: const Icon(Icons.refresh_sharp),
                         ),
-                        const SizedBox(height: 9),
                       ],
-                    ),
-                    Column(
-                      children: [
-                        GestureDetector(
-                          onTap: fitchPhoto2,
-                          child: Container(
-                            color: Colors.blueGrey,
-                            height: 150,
-                            width: 150,
-                            child: img2 == null
-                                ? const Icon(
-                                    Icons.image,
-                                    size: 50,
-                                  )
-                                : Image(
-                                    image: FileImage(img2!),
-                                    fit: BoxFit.fill,
-                                  ),
-                          ),
-                        ),
-                        const SizedBox(height: 9),
-                      ],
-                    )
-                  ],
-                ),
-                const SizedBox(height: 30),
-                ElevatedButton(
-                  style:
-                      ElevatedButton.styleFrom(backgroundColor: Colors.white),
-                  onPressed: learn,
-                  child: const Padding(
-                    padding: EdgeInsets.only(top: 7),
-                    child: Text(
-                      'Learn',
-                      style: TextStyle(color: Colors.black),
                     ),
                   ),
-                ),
-                const SizedBox(height: 50),
-                Column(
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Column(
+                        children: [
+                          buildGestureDetector(
+                              'Select photo 1', img1, fitchPhoto1),
+                          const SizedBox(height: 9),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          buildGestureDetector(
+                              'Select photo 2', img2, fitchPhoto2),
+                          const SizedBox(height: 9),
+                        ],
+                      )
+                    ],
+                  ),
+                  const SizedBox(height: 30),
+                  ElevatedButton(
+                    style:
+                        ElevatedButton.styleFrom(backgroundColor: Colors.white),
+                    onPressed: learn,
+                    child: const Padding(
+                      padding: EdgeInsets.only(top: 7),
+                      child: Text(
+                        'Learn',
+                        style: TextStyle(color: Colors.black),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 11),
+                  Container(
+                    padding: EdgeInsets.zero,
+                    width: 25,
+                    height: 25,
+                    child: Visibility(
+                      visible: isLoading,
+                        child: const CircularProgressIndicator(
+                      color: Colors.black,
+                    )),
+                  ),
+                  const SizedBox(height: 30),
+                  buildGestureDetector('Select photo 3', img3, fitchPhoto3),
+                ],
+              ),
+              Expanded(
+                  child: Container(
+                height: 5,
+              )),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Container(
-                      color: Colors.blueGrey,
-                      height: 180,
-                      width: 180,
-                      child: img3 == null
-                          ? const Icon(
-                              Icons.image,
-                              size: 50,
-                            )
-                          : Image(
-                              image: FileImage(img3!),
-                              fit: BoxFit.fill,
-                            ),
+                      padding: EdgeInsets.zero,
+                      width: 120,
+                      child: ElevatedButton(
+                        onPressed: getResult,
+                        child: const Text('Show Result'),
+                      ),
                     ),
-                    const SizedBox(height: 9),
-                    ElevatedButton(
-                      onPressed: fitchPhoto3,
-                      child: const Text('choose photo 3'),
-                    )
+                    Container(
+                      height: 45,
+                      width: 200,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(9),
+                        color: Colors.white,
+                      ),
+                      child: const Center(
+                        child: Text(
+                          'Dog',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
-              ],
-            ),
-            Positioned(
-              top: 600,
-              left: 20,
-              child: Container(
-                width: 120,
-                child: ElevatedButton(
-                  onPressed: getResult,
-                  child: const Text('Show Result'),
-                ),
-              ),
-            ),
-            Positioned(
-              top: 602,
-              left: 170,
-              child: Container(
-                height: 45,
-                width: 200,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(9),
-                  color: Colors.white,
-                ),
-                child: const Center(
-                  child: Text(
-                    'Dog',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-
-          ],
+              )
+            ],
+          ),
         ),
+      ),
+    );
+  }
+
+  buildGestureDetector(String txt, File? img, selectedPhoto) {
+    return GestureDetector(
+      onTap: selectedPhoto,
+      child: Container(
+        decoration: BoxDecoration(
+          color: const Color(0xff001456),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        height: 170,
+        width: 170,
+        child: img == null
+            ? Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(
+                    Icons.image,
+                    size: 50,
+                    color: Colors.white,
+                  ),
+                  const SizedBox(height: 5),
+                  Text(
+                    txt,
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                ],
+              )
+            : ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: Image(
+                  image: FileImage(img),
+                  fit: BoxFit.fill,
+                ),
+              ),
       ),
     );
   }
@@ -197,6 +205,7 @@ class _PerceptronPageState extends State<PerceptronPage> {
       source: ImageSource.gallery,
     );
     final file = File(pickedFile!.path);
+    print('@@@@@@***Image Path***@@@@@@ ${pickedFile.path}');
     setState(() {
       try {
         img2 = file;
@@ -212,6 +221,7 @@ class _PerceptronPageState extends State<PerceptronPage> {
       source: ImageSource.gallery,
     );
     final file = File(pickedFile!.path);
+    print('@@@@@@***Image Path***@@@@@@ ${pickedFile.path}');
     setState(() {
       try {
         img3 = file;
@@ -227,6 +237,7 @@ class _PerceptronPageState extends State<PerceptronPage> {
       img2 = null;
       img3 = null;
       perceptron.clear();
+      isLoading = false;
     });
   }
 
@@ -235,6 +246,9 @@ class _PerceptronPageState extends State<PerceptronPage> {
   }
 
   Future<void> learn() async {
+    setState(() {
+      isLoading = true;
+    });
     // final newMatrix = await Resize.resizeImage(img1!.path, 400, 400);
     // final newMatrix2 = await Resize.resizeImage(img2!.path, 400, 400);
     // final newMatrix3 = await Resize.resizeImage(img3!.path, 400, 400);
@@ -245,6 +259,10 @@ class _PerceptronPageState extends State<PerceptronPage> {
     matrix = Resize.normalizeListToSize(matrix, 400);
     matrix2 = Resize.normalizeListToSize(matrix2, 400);
     perceptron.train([matrix, matrix2], [1, -1]);
+    await Future.delayed(const Duration(seconds: 3));
+    setState(() {
+      isLoading = false;
+    });
   }
 
   Future<void> getResult() async {
