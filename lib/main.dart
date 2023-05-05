@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
       home: const HomePage(),
       routes: {
         'hamming':(context)=> const HammingPage(),
-        'perceptron':(context)=> const PreceptronPage(),
+        'perceptron':(context)=> const PerceptronPage(),
       },
     );
   }

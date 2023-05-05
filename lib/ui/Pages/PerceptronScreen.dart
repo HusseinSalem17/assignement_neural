@@ -1,26 +1,29 @@
 import 'dart:io';
-import 'dart:math';
-import 'package:assigenment/algorithms/algorithm.dart';
 import 'package:assigenment/algorithms/preceptron.dart';
 import 'package:assigenment/services/services.dart';
 import 'package:assigenment/utilities/resize.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
-class PreceptronPage extends StatefulWidget {
-  const PreceptronPage({Key? key}) : super(key: key);
+class PerceptronPage extends StatefulWidget {
+  const PerceptronPage({Key? key}) : super(key: key);
 
   @override
-  State<PreceptronPage> createState() => _PreceptronPageState();
+  State<PerceptronPage> createState() => _PerceptronPageState();
 }
 
-class _PreceptronPageState extends State<PreceptronPage> {
+class _PerceptronPageState extends State<PerceptronPage> {
   final ImagePicker _picker = ImagePicker();
   File? img1, img2, img3;
 
   bool photo1 = false;
   bool photo2 = false;
   bool photo3 = false;
+
+  late final PerceptronDeltaRule perceptron =
+      PerceptronDeltaRule(numInputs: 400, learningRate: 0.1);
+
+  int? res;
 
   @override
   Widget build(BuildContext context) {
@@ -50,51 +53,62 @@ class _PreceptronPageState extends State<PreceptronPage> {
                   children: [
                     Column(
                       children: [
-                        Container(
-                          color: Colors.blueGrey,
-                          height: 180,
-                          width: 180,
-                          child: img1 == null
-                              ? const Icon(
-                                  Icons.image,
-                                  size: 50,
-                                )
-                              : Image(
-                                  image: FileImage(img1!),
-                                  fit: BoxFit.fill,
-                                ),
+                        GestureDetector(
+                          onTap: fitchPhoto1,
+                          child: Container(
+                            color: Colors.blueGrey,
+                            height: 150,
+                            width: 150,
+                            child: img1 == null
+                                ? const Icon(
+                                    Icons.image,
+                                    size: 50,
+                                  )
+                                : Image(
+                                    image: FileImage(img1!),
+                                    fit: BoxFit.fill,
+                                  ),
+                          ),
                         ),
                         const SizedBox(height: 9),
-                        ElevatedButton(
-                          onPressed: fitchPhoto1,
-                          child: const Text('choose photo 1'),
-                        )
                       ],
                     ),
                     Column(
                       children: [
-                        Container(
-                          color: Colors.blueGrey,
-                          height: 180,
-                          width: 180,
-                          child: img2 == null
-                              ? const Icon(
-                                  Icons.image,
-                                  size: 50,
-                                )
-                              : Image(
-                                  image: FileImage(img2!),
-                                  fit: BoxFit.fill,
-                                ),
+                        GestureDetector(
+                          onTap: fitchPhoto2,
+                          child: Container(
+                            color: Colors.blueGrey,
+                            height: 150,
+                            width: 150,
+                            child: img2 == null
+                                ? const Icon(
+                                    Icons.image,
+                                    size: 50,
+                                  )
+                                : Image(
+                                    image: FileImage(img2!),
+                                    fit: BoxFit.fill,
+                                  ),
+                          ),
                         ),
                         const SizedBox(height: 9),
-                        ElevatedButton(
-                          onPressed: fitchPhoto2,
-                          child: const Text('choose photo 2'),
-                        )
                       ],
                     )
                   ],
+                ),
+                const SizedBox(height: 30),
+                ElevatedButton(
+                  style:
+                      ElevatedButton.styleFrom(backgroundColor: Colors.white),
+                  onPressed: learn,
+                  child: const Padding(
+                    padding: EdgeInsets.only(top: 7),
+                    child: Text(
+                      'Learn',
+                      style: TextStyle(color: Colors.black),
+                    ),
+                  ),
                 ),
                 const SizedBox(height: 50),
                 Column(
@@ -128,7 +142,7 @@ class _PreceptronPageState extends State<PreceptronPage> {
               child: Container(
                 width: 120,
                 child: ElevatedButton(
-                  onPressed: loadImageMatrix,
+                  onPressed: getResult,
                   child: const Text('Show Result'),
                 ),
               ),
@@ -153,7 +167,8 @@ class _PreceptronPageState extends State<PreceptronPage> {
                   ),
                 ),
               ),
-            )
+            ),
+
           ],
         ),
       ),
@@ -211,6 +226,7 @@ class _PreceptronPageState extends State<PreceptronPage> {
       img1 = null;
       img2 = null;
       img3 = null;
+      perceptron.clear();
     });
   }
 
@@ -218,22 +234,23 @@ class _PreceptronPageState extends State<PreceptronPage> {
     return 90000000000000;
   }
 
-  Future<void> loadImageMatrix() async {
+  Future<void> learn() async {
     // final newMatrix = await Resize.resizeImage(img1!.path, 400, 400);
     // final newMatrix2 = await Resize.resizeImage(img2!.path, 400, 400);
     // final newMatrix3 = await Resize.resizeImage(img3!.path, 400, 400);
 
     var matrix = await Services.fileAndNormalize(img1!.path);
     var matrix2 = await Services.fileAndNormalize(img2!.path);
-    var matrix3 = await Services.fileAndNormalize(img3!.path);
-    var num = minOfThree(matrix.length, matrix2.length, matrix3.length);
-    matrix = Resize.normalizeListToSize(matrix, num);
-    matrix2 = Resize.normalizeListToSize(matrix2, num);
-    matrix3 = Resize.normalizeListToSize(matrix3, num);
-    final perceptron = Perceptron(numInputs: num, learningRate: 0.1);
+    // var num = minOfThree(matrix.length, matrix2.length, matrix3.length);
+    matrix = Resize.normalizeListToSize(matrix, 400);
+    matrix2 = Resize.normalizeListToSize(matrix2, 400);
     perceptron.train([matrix, matrix2], [1, -1]);
-    final prediction = perceptron.predict(matrix3);
-    print('Prediction: $prediction');
+  }
+
+  Future<void> getResult() async {
+    var matrix3 = await Services.fileAndNormalize(img3!.path);
+    matrix3 = Resize.normalizeListToSize(matrix3, 400);
+    print('Prediction: ${perceptron.predict(matrix3)}');
   }
 }
 

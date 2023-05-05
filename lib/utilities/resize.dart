@@ -2,6 +2,10 @@ import 'dart:math';
 
 class Resize {
   static List<double> normalizeListToSize(List<double> numbers, int size) {
+    if(numbers.length == size) {
+      return numbers;
+    }
+    
     double mean = numbers.reduce((a, b) => a + b) / numbers.length;
     double std = sqrt(
         numbers.map((x) => pow(x - mean, 2)).reduce((a, b) => a + b) /

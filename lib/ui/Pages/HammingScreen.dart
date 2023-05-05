@@ -50,13 +50,13 @@ class _HammingPageState extends State<HammingPage> {
                       children: [
                         Container(
                           color: Colors.blueGrey,
-                          height: 180,
-                          width: 180,
+                          height: 150,
+                          width: 150,
                           child: img1 == null
                               ? const Icon(
-                                  Icons.image,
-                                  size: 50,
-                                )
+                            Icons.image,
+                            size: 50,
+                          )
                               : Image(
                               image: FileImage(img1!),
                               fit: BoxFit.fill,
@@ -73,8 +73,8 @@ class _HammingPageState extends State<HammingPage> {
                       children: [
                         Container(
                           color: Colors.blueGrey,
-                          height: 180,
-                          width: 180,
+                          height: 150,
+                          width: 150,
                           child: img2 == null
                               ? const Icon(
                                   Icons.image,
@@ -99,8 +99,8 @@ class _HammingPageState extends State<HammingPage> {
                   children: [
                     Container(
                       color: Colors.blueGrey,
-                      height: 180,
-                      width: 180,
+                      height: 150,
+                      width: 150,
                       child: img3 == null
                           ? const Icon(
                               Icons.image,
@@ -217,11 +217,11 @@ class _HammingPageState extends State<HammingPage> {
   }
 
   Future<void> loadImageMatrix() async {
-    
+
     var matrix = await Services.fileAndNormalize(img1!.path);
     var matrix2 = await Services.fileAndNormalize(img2!.path);
     var matrix3 = await Services.fileAndNormalize(img3!.path);
-    
+
     var num = minOfThree(matrix.length, matrix2.length, matrix3.length);
     matrix = Resize.normalizeListToSize(matrix, num);
     matrix2 = Resize.normalizeListToSize(matrix2, num);
