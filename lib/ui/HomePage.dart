@@ -15,7 +15,7 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.transparent,
-        title: const Text('Ai Recognition'),
+        title: const Text('AI Recognition'),
       ),
       body: Container(
         width: double.infinity,
