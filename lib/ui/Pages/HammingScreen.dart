@@ -20,7 +20,7 @@ class _HammingPageState extends State<HammingPage> {
   bool photo2 = false;
   bool photo3 = false;
 
-  int? res;
+  String? res;
 
   @override
   Widget build(BuildContext context) {
@@ -69,11 +69,11 @@ class _HammingPageState extends State<HammingPage> {
               ),
               Expanded(
                   child: Container(
-                height: 5,
-              )),
+                    height: 5,
+                  )),
               Padding(
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+                const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -124,27 +124,27 @@ class _HammingPageState extends State<HammingPage> {
         width: 170,
         child: img == null
             ? Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(
-                    Icons.image,
-                    size: 50,
-                    color: Colors.white,
-                  ),
-                  const SizedBox(height: 5),
-                  Text(
-                    txt,
-                    style: const TextStyle(color: Colors.white),
-                  ),
-                ],
-              )
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(
+              Icons.image,
+              size: 50,
+              color: Colors.white,
+            ),
+            const SizedBox(height: 5),
+            Text(
+              txt,
+              style: const TextStyle(color: Colors.white),
+            ),
+          ],
+        )
             : ClipRRect(
-                borderRadius: BorderRadius.circular(12),
-                child: Image(
-                  image: FileImage(img),
-                  fit: BoxFit.fill,
-                ),
-              ),
+          borderRadius: BorderRadius.circular(12),
+          child: Image(
+            image: FileImage(img),
+            fit: BoxFit.fill,
+          ),
+        ),
       ),
     );
   }
@@ -215,7 +215,10 @@ class _HammingPageState extends State<HammingPage> {
 
     Hamming h = Hamming(weights: [matrix, matrix2], input: matrix3);
     setState(() {
-      res = h.result();
+      if (h.result() == 1)
+        res = 'Image 1';
+      else
+        res ='Image 2';
     });
   }
 }

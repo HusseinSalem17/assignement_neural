@@ -19,7 +19,7 @@ class _PerceptronPageState extends State<PerceptronPage> {
   late final PerceptronDeltaRule perceptron =
       PerceptronDeltaRule(numInputs: 400, learningRate: 0.1);
 
-  int? res;
+  String? res;
 
   @override
   Widget build(BuildContext context) {
@@ -77,8 +77,7 @@ class _PerceptronPageState extends State<PerceptronPage> {
                   ),
                   const Text(
                     'Knowledge is power.',
-                    style: TextStyle(color: Colors.white
-                    ,fontSize: 12),
+                    style: TextStyle(color: Colors.white, fontSize: 12),
                   ),
                   const SizedBox(height: 6),
                   Container(
@@ -254,7 +253,10 @@ class _PerceptronPageState extends State<PerceptronPage> {
     var matrix3 = await Services.fileAndNormalize(img3!.path);
     matrix3 = Resize.normalizeListToSize(matrix3, 400);
     setState(() {
-      res = perceptron.predict(matrix3);
+      if (perceptron.predict(matrix3) == 1)
+        res = 'Image 1';
+      else
+        res = 'Image 2';
     });
   }
 }

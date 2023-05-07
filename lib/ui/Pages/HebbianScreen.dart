@@ -20,7 +20,7 @@ class _HebbianPageState extends State<HebbianPage> {
   bool photo2 = false;
   bool photo3 = false;
 
-  int? res;
+  String? res;
 
   @override
   Widget build(BuildContext context) {
@@ -215,7 +215,10 @@ class _HebbianPageState extends State<HebbianPage> {
 
     Hebbian h = Hebbian(vector1: matrix, vector2: matrix2, input: matrix3);
     setState(() {
-      res = h.determine();
+      if (h.determine() == 1)
+        res = 'Image 1';
+      else
+        res = 'Image 2';
     });
   }
 }
