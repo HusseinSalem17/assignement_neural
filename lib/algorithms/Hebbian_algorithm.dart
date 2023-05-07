@@ -133,12 +133,3 @@ class hebbian {
     return result <= 0 ? -1 : 1;
   }
 }
-
-void main() {
-  //test
-  hebbian h =
-      hebbian(vector1: [1,-1, -1], vector2: [1, 1, -1], input: [-1, -1, -1]);//vectors must be some length
-  print('${h.determine()}');
-  //if input close to vector 1 then algorithm return -1 and
-  //if close to vector 2 return 1
-}
