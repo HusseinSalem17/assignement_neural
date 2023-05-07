@@ -1,14 +1,14 @@
 import 'dart:math';
 
-class hebbian {
+class Hebbian {
   List<double> vector1; //image 1
   List<double> vector2; //image 2
   List<double> input; //check image
   List<List<double>> target = [
-    [-1, 1]
+    [1, -1]
   ]; //target of system
   List<List<double>> weightMatrix = [];
-  hebbian(
+  Hebbian(
       {required List<double> this.vector1,
       required List<double> this.vector2,
       required List<double> this.input});

@@ -1,5 +1,6 @@
 import 'package:assigenment/ui/HomePage.dart';
 import 'package:assigenment/ui/Pages/HammingScreen.dart';
+import 'package:assigenment/ui/Pages/HebbianScreen.dart';
 import 'package:assigenment/ui/Pages/PerceptronScreen.dart';
 import 'package:assigenment/ui/animated_splash_screen.dart';
 import 'package:flutter/material.dart';
@@ -30,6 +31,7 @@ class MyApp extends StatelessWidget {
       routes: {
         'hamming': (context) => const HammingPage(),
         'perceptron': (context) => const PerceptronPage(),
+        'Hebbian': (context) => const HebbianPage()
       },
     );
   }

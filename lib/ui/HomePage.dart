@@ -68,7 +68,26 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                     ),
-                  )
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 20),
+                      child: SizedBox(
+                        height: 50,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.orange,
+                          ),
+                          onPressed: () =>
+                              Navigator.pushNamed(context, 'Hebbian'),
+                          child: const Text('Hebbian',
+                              style: TextStyle(
+                                fontSize: 20,
+                              )),
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               )
             ],
