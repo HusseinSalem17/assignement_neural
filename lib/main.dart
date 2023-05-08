@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
       routes: {
         'hamming': (context) => const HammingPage(),
         'perceptron': (context) => const PerceptronPage(),
-        'Hebbian': (context) => const HebbianPage()
+        'Hebbian': (context) => const HebbianPage(),
       },
     );
   }
