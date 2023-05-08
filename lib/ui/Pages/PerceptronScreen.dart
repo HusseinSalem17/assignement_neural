@@ -232,6 +232,7 @@ class _PerceptronPageState extends State<PerceptronPage> {
       img3 = null;
       perceptron.clear();
       isLoading = false;
+      res = null;
     });
   }
 
@@ -243,7 +244,7 @@ class _PerceptronPageState extends State<PerceptronPage> {
     var matrix2 = await Services.fileAndNormalize(img2!.path);
     matrix = Resize.normalizeListToSize(matrix, 400);
     matrix2 = Resize.normalizeListToSize(matrix2, 400);
-    perceptron.train([matrix, matrix2], [1, -1]);
+    await perceptron.train([matrix, matrix2], [1, -1]);
     setState(() {
       isLoading = false;
     });

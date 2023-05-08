@@ -200,6 +200,7 @@ class _HebbianPageState extends State<HebbianPage> {
       img1 = null;
       img2 = null;
       img3 = null;
+      res = null;
     });
   }
 

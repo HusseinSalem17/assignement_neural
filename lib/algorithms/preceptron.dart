@@ -7,7 +7,8 @@ class PerceptronDeltaRule {
   List<List<List<double>>> inputs = [];
   int err = 0;
 
-  PerceptronDeltaRule({required int numInputs, required double this.learningRate}) {
+  PerceptronDeltaRule(
+      {required int numInputs, required double this.learningRate}) {
     weights = List.generate(numInputs, (i) => Random().nextDouble());
   }
 
@@ -20,10 +21,10 @@ class PerceptronDeltaRule {
     return weightedSum > 0 ? 1 : -1;
   }
 
-  void train(
+  Future<void> train(
     List<List<double>> inputs,
     List<int> targets,
-  ) {
+  ) async {
     print('Matrix 1: ${inputs[0]}');
     print('Matrix 2: ${inputs[1]}');
     if (!this.inputs.contains(inputs)) {

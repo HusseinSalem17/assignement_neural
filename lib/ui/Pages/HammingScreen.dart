@@ -200,6 +200,7 @@ class _HammingPageState extends State<HammingPage> {
       img1 = null;
       img2 = null;
       img3 = null;
+      res = null;
     });
   }
 
