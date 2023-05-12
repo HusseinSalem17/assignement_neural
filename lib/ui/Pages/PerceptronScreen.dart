@@ -254,10 +254,11 @@ class _PerceptronPageState extends State<PerceptronPage> {
     var matrix3 = await Services.fileAndNormalize(img3!.path);
     matrix3 = Resize.normalizeListToSize(matrix3, 400);
     setState(() {
-      if (perceptron.predict(matrix3) == 1)
+      if (perceptron.predict(matrix3) == 1) {
         res = 'Image 1';
-      else
+      } else {
         res = 'Image 2';
+      }
     });
   }
 }

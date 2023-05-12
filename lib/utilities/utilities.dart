@@ -112,5 +112,4 @@ class Utilities {
     return normalizedPixelValues;
   }
 
-  
 }

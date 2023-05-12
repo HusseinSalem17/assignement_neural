@@ -13,7 +13,6 @@ class HammingPage extends StatefulWidget {
 }
 
 class _HammingPageState extends State<HammingPage> {
-  final ImagePicker _picker = ImagePicker();
   File? img1, img2, img3;
 
   bool photo1 = false;
@@ -216,7 +215,7 @@ class _HammingPageState extends State<HammingPage> {
 
     Hamming h = Hamming(weights: [matrix, matrix2], input: matrix3);
     setState(() {
-      if (h.result() == 1)
+      if (h.resultFromRecurrentPhase() == 1)
         res = 'Image 1';
       else
         res ='Image 2';
